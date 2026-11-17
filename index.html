@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Daniel Akhabue for President</title>
+<meta name="description" content="Daniel Akhabue for President, CMU-Africa Data Science Club. Continuity, Growth, Impact.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Hanken+Grotesk:ital,wght@0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: a campaign read like a notebook run. Each chapter is a cell (In [01] … In [07]);
+   the journey is a horizontal, scroll-driven timeline; a DNA helix of data points is the recurring motif. */
+:root{
+  --ink:#0F0C0D;
+  --ink-2:#1A1516;
+  --ink-3:#261D1E;
+  --paper:#F4F0EC;
+  --muted:#B3A9AA;
+  --red:#a81a1a;      /* CMU-Africa red: fills, buttons, bars */
+  --red-hi:#E5484D;   /* lighter tint of the red for text and strokes on dark */
+  --on-red:#FFFFFF;
+  --gold:#E8B04A;     /* medals only */
+  --line:rgba(242,237,226,.14);
+  --f-display:"Bricolage Grotesque", "Arial Narrow", system-ui, sans-serif;
+  --f-body:"Hanken Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --gutter:clamp(18px,4vw,56px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{overflow-x:clip;scroll-behavior:smooth}
+body{margin:0;background:var(--ink);color:var(--paper);font-family:var(--f-body);font-size:17px;line-height:1.6;overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1;margin:0;text-wrap:balance;letter-spacing:-.02em}
+p{margin:0}
+:focus-visible{outline:2px solid var(--red-hi);outline-offset:3px;border-radius:4px}
+.mono{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.02em}
+.wrap{padding-inline:var(--gutter);max-width:1320px;margin-inline:auto}
+::selection{background:var(--red);color:var(--on-red)}
+
+/* Ambient grain + grid */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:88px 88px;opacity:.18;mask-image:radial-gradient(ellipse at 50% 0%,#000 30%,transparent 75%)}
+main,header,footer{position:relative;z-index:1}
+
+/* Kente-inspired strip divider */
+.strip{height:10px;background:
+  repeating-linear-gradient(90deg,var(--red) 0 28px,var(--ink) 28px 34px,var(--paper) 34px 42px,var(--ink) 42px 48px,var(--ink-3) 48px 84px,var(--ink) 84px 90px);
+  opacity:.9}
+
+/* ---------- Intro ---------- */
+#intro{position:fixed;inset:0;z-index:100;background:var(--ink);display:grid;place-items:center;transition:opacity .6s ease,visibility .6s}
+#intro.gone{opacity:0;visibility:hidden}
+#intro pre{font-family:var(--f-mono);font-size:clamp(.8rem,1.6vw,1rem);line-height:1.9;color:var(--muted);margin:0;padding:24px;min-width:min(560px,90vw);white-space:pre-wrap}
+#intro pre b{color:var(--red-hi);font-weight:500}
+#intro pre i{color:var(--paper);font-style:normal}
+#intro button{position:absolute;bottom:28px;right:28px;background:none;border:1px solid var(--line);color:var(--muted);font-family:var(--f-mono);font-size:.75rem;padding:8px 14px;border-radius:999px;cursor:pointer}
+.caret{display:inline-block;width:.6em;height:1.1em;background:var(--red-hi);vertical-align:-.2em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ---------- Top bar ---------- */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px var(--gutter);background:linear-gradient(var(--ink) 30%,transparent);}
+.brand{font-family:var(--f-display);font-weight:700;font-size:1.05rem;text-decoration:none;display:flex;align-items:center;gap:10px}
+.brand span{color:var(--red-hi)}
+.train{display:flex;align-items:center;gap:10px;color:var(--muted)}
+.train .bar{width:clamp(80px,14vw,200px);height:4px;background:var(--line);border-radius:4px;overflow:hidden}
+.train .bar i{display:block;height:100%;width:0;background:var(--red-hi)}
+.nav{display:flex;gap:4px}
+.nav a{font-family:var(--f-mono);font-size:.72rem;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:999px}
+.nav a:hover,.nav a.on{color:var(--on-red);background:var(--red)}
+@media (max-width:980px){.nav{display:none}}
+
+/* ---------- Cells ---------- */
+.cell-tag{display:flex;align-items:center;gap:12px;color:var(--muted);margin-bottom:22px}
+.cell-tag b{color:var(--red-hi);font-weight:500}
+.cell-tag::after{content:"";flex:1;height:1px;background:var(--line);max-width:240px}
+section{scroll-margin-top:70px}
+.h2{font-size:clamp(2.4rem,6vw,5rem)}
+.lede{color:var(--muted);max-width:60ch;font-size:1.1rem;margin-top:18px}
+
+/* ---------- Hero ---------- */
+.hero{min-height:min(920px,100svh);display:grid;grid-template-columns:1.15fr .85fr;align-items:center;gap:clamp(24px,4vw,64px);padding-top:110px;padding-bottom:60px}
+.hero h1{font-size:clamp(3.4rem,10.5vw,9.6rem);font-weight:800;letter-spacing:-.045em;line-height:.86;font-variation-settings:"opsz" 96}
+.hero h1 .l2{display:block;color:transparent;-webkit-text-stroke:1.5px var(--paper)}
+.hero h1 .l2 em{font-style:normal;color:var(--red-hi);-webkit-text-stroke:0}
+.eyebrow{display:inline-flex;flex-wrap:wrap;gap:8px 14px;align-items:center;color:var(--muted);margin-bottom:26px}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:var(--red-hi);box-shadow:0 0 0 6px rgba(229,72,77,.15);animation:pulse 2s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 12px rgba(229,72,77,0)}}
+.tagline{font-family:var(--f-display);font-size:clamp(1.3rem,2.4vw,2rem);font-weight:500;margin-top:26px;max-width:22ch;line-height:1.15}
+.tagline mark{background:none;color:var(--red-hi)}
+.cgi{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.cgi a{display:flex;align-items:baseline;gap:8px;border:1px solid var(--line);border-radius:999px;padding:9px 16px;text-decoration:none;font-weight:600;transition:border-color .2s,background .2s}
+.cgi a b{font-family:var(--f-mono);font-weight:500;color:var(--red-hi);font-size:.8rem}
+.cgi a:hover{border-color:var(--red-hi);background:rgba(229,72,77,.08)}
+.ctas{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.btn{display:inline-flex;align-items:center;gap:10px;font-weight:600;text-decoration:none;padding:14px 22px;border-radius:12px;border:1px solid var(--line);cursor:pointer;font-family:var(--f-body);font-size:1rem;color:var(--paper);background:none;transition:transform .2s,background .2s}
+.btn.primary{background:var(--red);color:var(--on-red);border-color:var(--red)}
+.btn:hover{transform:translateY(-2px)}
+.portrait{position:relative;aspect-ratio:4/5;max-width:470px;justify-self:end;width:100%}
+.portrait canvas{position:absolute;inset:-12% -22% -12% -22%;width:144%;height:124%;z-index:0;pointer-events:none}
+.portrait figure{position:relative;z-index:1;margin:0;height:100%;border-radius:220px 220px 18px 18px;overflow:hidden;border:1px solid var(--line);box-shadow:0 40px 80px -30px rgba(0,0,0,.7)}
+.portrait figure img{width:100%;height:100%;object-fit:cover;object-position:50% 20%;transform:scale(1.04);transition:transform 1.2s ease}
+.portrait:hover figure img{transform:scale(1.08)}
+.portrait figcaption{position:absolute;left:0;right:0;bottom:0;padding:40px 18px 14px;background:linear-gradient(transparent,rgba(15,12,13,.92));color:var(--muted)}
+.badge{position:absolute;z-index:2;display:flex;align-items:center;gap:12px;background:rgba(26,21,22,.92);color:var(--paper);border:1px solid var(--line);backdrop-filter:blur(6px);border-radius:16px;padding:10px 16px 10px 10px;font-size:1rem!important;font-weight:600;font-size:.85rem;line-height:1.25;box-shadow:0 18px 40px -16px rgba(0,0,0,.6);animation:float 6s ease-in-out infinite}
+.badge small{display:block;font-family:var(--f-mono);font-size:.68rem;font-weight:400;color:var(--muted)}
+.badge .plate{--lh:34px}
+.badge b{display:block;font-family:var(--f-display);font-size:1.25rem;font-weight:800;letter-spacing:-.01em;line-height:1.05}
+.badge.b1{left:-8%;top:16%}
+.badge.b2{right:-8%;bottom:20%;animation-delay:-3s;background:var(--red);color:var(--on-red);border-color:var(--red)}
+.badge.b2 small{color:rgba(255,255,255,.75)}
+@keyframes float{50%{transform:translateY(-10px)}}
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding-top:96px}
+  .portrait{justify-self:center;max-width:360px;order:-1}
+  .badge.b1{left:-4%}.badge.b2{right:-2%}
+  .badge{padding:7px 12px 7px 7px;gap:9px}.badge .plate{--lh:22px}.badge b{font-size:1rem}
+}
+
+/* ---------- Stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.stat{padding:26px 18px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat .n{font-family:var(--f-display);font-weight:800;font-size:clamp(2.2rem,4vw,3.4rem);line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.stat .n sup{font-size:.45em;color:var(--red-hi);vertical-align:.9em;margin-left:2px}
+.stat p{color:var(--muted);font-size:.9rem;margin-top:8px;line-height:1.35}
+.stat .plate{--lh:18px;margin-top:12px;padding:5px 8px}
+@media (max-width:900px){.stats{grid-template-columns:repeat(3,1fr)}.stat:nth-child(3){border-right:0}.stat:nth-child(-n+3){border-bottom:1px solid var(--line)}}
+@media (max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}.stat{border-right:1px solid var(--line)!important;border-bottom:1px solid var(--line)}.stat:nth-child(2n){border-right:0!important}}
+
+/* ---------- Journey (pinned horizontal) ---------- */
+.journey{position:relative}
+.journey-head{padding-top:120px;padding-bottom:40px}
+.pin{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;flex-direction:column;justify-content:center}
+.track{display:flex;gap:36px;align-items:center;padding-inline:var(--gutter) 30vw;will-change:transform}
+.rail{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--line);z-index:0}
+.jprog{position:absolute;left:var(--gutter);right:var(--gutter);bottom:34px;display:flex;align-items:center;gap:14px;color:var(--muted)}
+.jprog .bar{flex:1;height:2px;background:var(--line);position:relative}
+.jprog .bar i{position:absolute;inset:0 auto 0 0;width:0;background:var(--red-hi)}
+.jprog .yr{font-family:var(--f-display);font-weight:800;font-size:1.6rem;color:var(--paper);min-width:4.5ch;font-variant-numeric:tabular-nums}
+.stop{position:relative;z-index:1;flex:0 0 auto;width:340px;background:var(--ink-2);border:1px solid var(--line);border-radius:20px;overflow:hidden;cursor:pointer;text-align:left;color:var(--paper);font:inherit;padding:0;transform-style:preserve-3d;transition:border-color .25s,box-shadow .25s}
+.stop:nth-child(even){margin-top:120px}
+.stop:nth-child(odd){margin-bottom:120px}
+.stop:hover{border-color:rgba(229,72,77,.6);box-shadow:0 30px 60px -30px rgba(229,72,77,.35)}
+.stop .ph{height:210px;background:var(--ink-3);position:relative;overflow:hidden}
+.stop .ph img{width:100%;height:100%;object-fit:cover;transition:transform .8s}
+.stop:hover .ph img{transform:scale(1.06)}
+.stop .ph .plate{position:absolute;left:12px;top:12px;--lh:24px;z-index:1}
+.stop .ph .plate img{width:auto;height:var(--lh);transform:none!important}
+.stop .ph .art .plate{position:static;--lh:132px;border-radius:14px}
+.stop .ph .art .plate.mlc{--lh:42px;padding:14px 20px}
+.stop .ph .count{position:absolute;right:10px;bottom:10px;background:rgba(15,12,13,.8);padding:4px 9px;border-radius:999px;color:var(--paper)}
+.stop .bd{padding:18px 20px 20px}
+.stop .when{color:var(--red-hi)}
+.stop h3{font-size:1.55rem;margin:8px 0 10px;line-height:1.05}
+.stop p{color:var(--muted);font-size:.95rem;line-height:1.5}
+.stop .more{display:inline-flex;gap:8px;margin-top:14px;color:var(--paper)}
+.stop.next{background:var(--red);color:var(--on-red);border-color:var(--red)}
+.stop.next p,.stop.next .when{color:rgba(255,255,255,.82)}
+.stop.next .more{color:var(--on-red)}
+.art{width:100%;height:100%;display:grid;place-items:center;background:
+  radial-gradient(circle at 30% 30%,rgba(229,72,77,.22),transparent 55%),
+  repeating-linear-gradient(45deg,rgba(242,237,226,.05) 0 2px,transparent 2px 14px),var(--ink-3)}
+.art svg{height:100%;width:auto;overflow:visible}
+.art span{font-family:var(--f-display);font-weight:800;font-size:3.4rem;color:var(--red-hi);letter-spacing:-.04em}
+.journey.flat .pin{position:relative;height:auto;overflow:visible;padding-bottom:40px}
+.journey.flat .track{flex-direction:column;align-items:stretch;padding-inline:var(--gutter);transform:none!important;gap:22px}
+.journey.flat .stop{width:auto;margin:0!important;max-width:620px}
+.journey.flat .rail,.journey.flat .jprog{display:none}
+.journey.flat .track{border-left:2px solid var(--line);margin-left:var(--gutter);padding-left:22px}
+
+/* ---------- Dialog ---------- */
+dialog{border:1px solid var(--line);background:var(--ink-2);color:var(--paper);border-radius:22px;padding:0;width:min(980px,94vw);max-height:90vh;overflow:auto}
+dialog::backdrop{background:rgba(8,6,6,.8);backdrop-filter:blur(6px)}
+.dlg-gal{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x mandatory;background:#080606}
+.dlg-gal img{height:min(52vh,460px);width:auto;scroll-snap-align:start;flex:0 0 auto}
+.dlg-bd{padding:24px 28px 28px;display:grid;gap:14px}
+.dlg-bd h3{font-size:clamp(1.8rem,4vw,2.6rem)}
+.dlg-bd p{color:var(--muted);max-width:62ch}
+.dlg-close{position:sticky;top:12px;float:right;margin:12px 12px -52px 0;z-index:2;width:40px;height:40px;border-radius:50%;border:0;background:var(--paper);color:var(--ink);font-size:1.3rem;cursor:pointer}
+.receipts{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:.74rem;text-decoration:none;border:1px solid var(--line);padding:7px 11px;border-radius:999px;color:var(--paper);transition:background .2s,color .2s,border-color .2s}
+.chip:hover{background:var(--red);color:var(--on-red);border-color:var(--red)}
+
+/* ---------- Talks ---------- */
+.talks{padding-block:130px 40px}
+.reel{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:46px}
+.vid{position:relative;display:block;text-decoration:none;border-radius:20px;overflow:hidden;aspect-ratio:4/5;border:1px solid var(--line);background:var(--ink-3)}
+.vid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.85);transition:transform .8s,filter .4s}
+.vid::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(15,12,13,.95))}
+.vid:hover img{transform:scale(1.05);filter:saturate(1.1)}
+.vid .play{position:absolute;z-index:2;top:50%;left:50%;width:78px;height:78px;margin:-39px 0 0 -39px;border-radius:50%;background:var(--red);display:grid;place-items:center;transition:transform .3s}
+.vid:hover .play{transform:scale(1.12)}
+.vid .play::before{content:"";border-left:22px solid var(--on-red);border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:6px}
+.vid .meta{position:absolute;z-index:2;left:20px;right:20px;bottom:20px}
+.vid .meta h3{font-size:1.7rem;margin:6px 0 4px}
+.vid .meta p{color:var(--muted);font-size:.92rem;line-height:1.4}
+.vid .meta .mono{color:var(--red-hi)}
+.vid.bir{background:
+  radial-gradient(circle at 70% 25%,rgba(229,72,77,.35),transparent 50%),
+  repeating-radial-gradient(circle at 70% 25%,rgba(242,237,226,.06) 0 1px,transparent 1px 22px),var(--ink-3)}
+.vid.bir{background:#E0906F}
+.vid img.birlogo{object-fit:contain;object-position:50% 0;height:76%;bottom:auto;filter:none;transform:none}
+.vid.bir::after{background:linear-gradient(180deg,transparent 64%,rgba(15,12,13,.96) 80%)}
+.vid.bir .big{position:absolute;top:22px;left:20px;right:20px;font-family:var(--f-display);font-weight:800;font-size:3.2rem;line-height:.9;letter-spacing:-.04em;color:var(--paper);opacity:.95}
+@media (max-width:900px){.reel{grid-template-columns:1fr;max-width:460px}}
+
+/* ---------- Community ---------- */
+.community{padding-block:130px 60px}
+.dna-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:46px;perspective:1200px}
+.flip{position:relative;height:300px;border:0;padding:0;background:none;cursor:pointer;color:var(--paper);font:inherit;text-align:left}
+.flip .in{position:absolute;inset:0;transition:transform .7s cubic-bezier(.2,.7,.2,1);transform-style:preserve-3d}
+.flip:hover .in,.flip.on .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;border:1px solid var(--line);padding:20px;display:flex;flex-direction:column;justify-content:space-between;background:var(--ink-2);overflow:hidden}
+.face.back{transform:rotateY(180deg);background:var(--paper);color:var(--ink)}
+.face.back p{font-size:.95rem;line-height:1.45}
+.face.back .chip{color:var(--ink);border-color:rgba(15,12,13,.25);align-self:flex-start}
+.face.back .chip:hover{background:var(--ink);color:var(--paper)}
+.face .role{color:var(--red-hi)}
+.face h3{font-size:1.65rem;line-height:1}
+.face .glyph{font-family:var(--f-display);font-weight:800;font-size:4.6rem;line-height:.8;color:transparent;-webkit-text-stroke:1px rgba(242,237,226,.4);letter-spacing:-.05em}
+.face .hint{color:var(--muted)}
+.face .plate{--lh:44px;align-self:flex-start;max-width:100%}
+.face .plate img{max-width:100%;height:auto;max-height:var(--lh)}
+@media (max-width:640px){.face .plate{--lh:32px}}
+@media (max-width:1050px){.dna-grid{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){.dna-grid{grid-template-columns:repeat(2,1fr);gap:12px}.flip{height:250px}.face{padding:16px}.face h3{font-size:1.25rem;overflow-wrap:anywhere}.face .glyph{font-size:3.4rem}.face.back p{font-size:.88rem}}
+.marquee{margin-top:56px;border-block:1px solid var(--line);overflow:hidden;padding:20px 0;mask-image:linear-gradient(90deg,transparent,#000 10%,#000 90%,transparent)}
+.marquee div{display:flex;gap:44px;align-items:center;width:max-content;animation:marq 46s linear infinite}
+.marquee .plate{--lh:42px;padding:8px 14px}
+.marquee span{font-family:var(--f-display);font-weight:600;font-size:clamp(1.4rem,3vw,2.2rem);white-space:nowrap;color:var(--muted)}
+.marquee span b{color:var(--red-hi);font-weight:600}
+@keyframes marq{to{transform:translateX(-50%)}}
+.mosaic{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:220px 220px;gap:12px;margin-top:56px}
+.mosaic figure{margin:0;border-radius:16px;overflow:hidden;position:relative;border:1px solid var(--line)}
+.mosaic figure:first-child{grid-row:span 2}
+.mosaic img{width:100%;height:100%;object-fit:cover;transition:transform 1s}
+.mosaic figure:hover img{transform:scale(1.05)}
+.mosaic figcaption{position:absolute;left:12px;bottom:10px;background:rgba(15,12,13,.8);padding:4px 10px;border-radius:999px;color:var(--paper)}
+@media (max-width:760px){.mosaic{grid-template-columns:1fr 1fr;grid-template-rows:240px 160px 160px}.mosaic figure:first-child{grid-column:span 2;grid-row:auto}}
+
+.cabinet-head{margin-top:110px}
+.cabinet{display:grid;grid-template-columns:repeat(10,1fr);gap:18px;margin-top:40px}
+.award{grid-column:span 2}
+.award{position:relative;display:grid;grid-template-rows:subgrid;grid-row:span 6;row-gap:10px;justify-items:center;text-align:center;padding:28px 20px 26px;border-radius:20px;border:1px solid var(--line);
+  background:radial-gradient(120% 70% at 50% 0%,rgba(232,176,74,.16),transparent 60%),var(--ink-2);overflow:hidden;cursor:pointer;outline-offset:3px}
+.award::after{content:"";position:absolute;left:14%;right:14%;bottom:0;height:6px;border-radius:6px 6px 0 0;background:linear-gradient(90deg,transparent,rgba(232,176,74,.35),transparent)}
+.award.wide{grid-column:span 5}
+.award .icon{height:150px;align-self:end;display:flex;align-items:flex-end;justify-content:center;gap:6px;filter:drop-shadow(0 18px 22px rgba(0,0,0,.55))}
+.award .icon svg{height:100%;width:auto;overflow:visible}
+.award .swing{transform-origin:50% 0;transition:transform .2s}
+.award:hover .swing,.award.go .swing{animation:swing 1.6s cubic-bezier(.3,.6,.4,1)}
+.award .lift{transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.award:hover .lift,.award.go .lift{transform:translateY(-10px) rotate(-4deg)}
+@keyframes swing{0%{transform:rotate(0)}15%{transform:rotate(14deg)}35%{transform:rotate(-10deg)}55%{transform:rotate(6deg)}75%{transform:rotate(-3deg)}100%{transform:rotate(0)}}
+.award .shine{animation:shine 5s ease-in-out infinite}
+@keyframes shine{0%,70%{transform:translateX(-140px)}100%{transform:translateX(160px)}}
+.award h3{font-family:var(--f-display);font-size:1.3rem;line-height:1.1;letter-spacing:-.01em;align-self:start}
+.award p{color:var(--muted);font-size:.88rem;line-height:1.45;max-width:32ch;align-self:start}
+.award .plate{--lh:28px;margin-top:6px;align-self:center}
+.award .plate.chip-win{background:transparent;border:1px solid rgba(232,176,74,.5);box-shadow:none;height:40px;padding:0 14px}
+.award .plate.chip-win b{font:500 .72rem var(--f-mono);color:var(--gold);letter-spacing:.08em;text-transform:uppercase;line-height:1}
+.award .nolink{display:block;height:1px}
+.award > a{align-self:end}
+.quad{display:grid;grid-template-columns:repeat(4,auto);gap:2px;align-items:end}
+.quad svg{height:96px!important}
+.award a{color:var(--red-hi);font-family:var(--f-mono);font-size:.72rem;margin-top:4px}
+.award .tally{font-family:var(--f-mono);font-size:.72rem;color:var(--gold);letter-spacing:.08em;text-transform:uppercase}
+.minis{display:grid;grid-template-columns:repeat(5,auto);gap:4px 10px;align-content:end}
+.minis svg{height:62px!important}
+.minis .swing:nth-child(odd){animation-delay:.08s!important}
+@media (max-width:1100px){.cabinet{grid-template-columns:repeat(2,1fr)}.award{grid-column:span 1}.award.wide{grid-column:span 1}.award.pair{grid-column:span 2}.quad svg{height:72px!important}.minis svg{height:50px!important}}
+@media (max-width:560px){.cabinet{grid-template-columns:1fr}.award.wide,.award.pair{grid-column:auto}.minis svg{height:46px!important}.award .icon{height:130px}}
+
+/* ---------- Logo plates ---------- */
+.plate{display:inline-flex;align-items:center;justify-content:center;background:#fff;border-radius:10px;padding:6px 10px;line-height:0;box-shadow:0 8px 18px -10px rgba(0,0,0,.6);flex:0 0 auto}
+.plate img{height:var(--lh,26px);width:auto;display:block}
+.plate.dark{background:#000;border:1px solid var(--line)}
+.plate.tile{padding:0;overflow:hidden;background:#efe3c9}
+.plate.tile img{height:calc(var(--lh,26px) + 12px)}
+.plate.mlc{gap:8px}
+.plate.mlc b{font:600 calc(var(--lh,26px)*.72)/1 var(--f-body);color:#000;letter-spacing:-.01em;white-space:nowrap}
+.plate.tile.bir-lg{--lh:138px}
+.art .plate.tile{border-radius:14px}
+.logos{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.logos .plate{--lh:22px}
+
+/* ---------- Manifesto ---------- */
+.manifesto{padding-block:130px 40px}
+.quote{font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,5.4vw,4.6rem);line-height:1;letter-spacing:-.035em;max-width:18ch;margin-top:10px}
+.quote em{font-style:normal;color:var(--red-hi)}
+.why{display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px;margin-top:56px}
+.why div{border-top:2px solid var(--red-hi);padding-top:16px}
+.why .mono{color:var(--red-hi)}
+.why p{color:var(--muted);margin-top:8px}
+@media (max-width:860px){.why{grid-template-columns:1fr}}
+
+.switcher{margin-top:90px;display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(24px,4vw,60px);align-items:start}
+.switcher h3{font-size:clamp(2rem,4.4vw,3.6rem)}
+.switcher h3 s{color:var(--muted);text-decoration-thickness:3px;text-decoration-color:var(--red-hi)}
+.toggle{display:inline-flex;margin-top:24px;background:var(--ink-2);border:1px solid var(--line);border-radius:999px;padding:4px}
+.toggle button{border:0;background:none;color:var(--muted);font:600 .95rem var(--f-body);padding:10px 18px;border-radius:999px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--red);color:var(--on-red)}
+.console{background:#0A0808;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.console .top{display:flex;gap:6px;padding:12px 14px;border-bottom:1px solid var(--line);align-items:center;color:var(--muted)}
+.console .top i{width:10px;height:10px;border-radius:50%;background:var(--ink-3)}
+.console .top span{margin-left:10px}
+.console ol{list-style:none;margin:0;padding:10px}
+.console li{display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;padding:13px 12px;border-radius:12px;transition:background .3s}
+.console li:hover{background:var(--ink-2)}
+.console li .k{font-family:var(--f-mono);color:var(--red-hi);font-size:.8rem}
+.console li b{font-weight:600}
+.console li small{display:block;color:var(--muted);font-size:.85rem}
+.console li .v{font-family:var(--f-mono);font-size:.75rem;color:var(--muted);text-align:right}
+.console .foot{border-top:1px solid var(--line);padding:12px 22px;color:var(--muted)}
+.console.swap ol{animation:swap .5s ease}
+@keyframes swap{from{opacity:0;transform:translateY(8px)}}
+@media (max-width:860px){.switcher{grid-template-columns:1fr}}
+
+.agenda{margin-top:100px}
+.tabs{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+.tabs button{display:flex;align-items:baseline;gap:10px;border:1px solid var(--line);background:none;color:var(--paper);font:700 clamp(1.3rem,2.6vw,2rem) var(--f-display);letter-spacing:-.02em;padding:14px 22px;border-radius:16px;cursor:pointer;transition:all .25s}
+.tabs button b{font:500 .8rem var(--f-mono);color:var(--red-hi)}
+.tabs button[aria-selected="true"]{background:var(--red);color:var(--on-red);border-color:var(--red)}
+.tabs button[aria-selected="true"] b{color:var(--on-red)}
+.panel{margin-top:22px;display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+.panel[hidden]{display:none}
+.plank{background:var(--ink-2);border:1px solid var(--line);border-radius:20px;padding:26px;display:flex;flex-direction:column;gap:12px;animation:swap .5s ease both}
+.plank:nth-child(2){animation-delay:.08s}.plank:nth-child(3){animation-delay:.16s}
+.plank .num{font-family:var(--f-display);font-weight:800;font-size:3.2rem;line-height:.8;color:transparent;-webkit-text-stroke:1px var(--red-hi)}
+.plank h4{font-family:var(--f-display);font-size:1.6rem;margin:0;line-height:1.05;letter-spacing:-.02em}
+.plank p{color:var(--muted);font-size:.97rem}
+.plank ul{margin:0;padding:0;list-style:none;display:grid;gap:7px}
+.plank li{position:relative;padding-left:20px;font-size:.95rem}
+.plank li::before{content:"";position:absolute;left:0;top:.62em;width:9px;height:2px;background:var(--red-hi)}
+.plank .kv{font-size:.92rem}
+.plank .kv b{color:var(--red-hi);font-weight:600}
+
+.summit{margin-top:110px;position:relative;border-radius:28px;overflow:hidden;border:1px solid rgba(229,72,77,.4);background:#0A0808}
+.summit canvas{position:absolute;inset:0;width:100%;height:100%;opacity:.7}
+.summit .in{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;padding:clamp(28px,5vw,64px)}
+.summit h3{font-size:clamp(2.4rem,6vw,5rem);letter-spacing:-.04em}
+.summit h3 span{color:var(--red-hi)}
+.summit p{color:var(--muted);margin-top:18px;max-width:46ch}
+.summit ul{list-style:none;margin:0;padding:0;display:grid;gap:10px;align-content:start}
+.summit li{background:rgba(18,23,58,.85);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;gap:14px;align-items:center;backdrop-filter:blur(4px)}
+.summit li .mono{color:var(--red-hi)}
+.summit .logos{margin-top:16px}
+.summit .proof{margin-top:22px;color:var(--paper);font-weight:600;max-width:48ch}
+@media (max-width:860px){.summit .in{grid-template-columns:1fr}}
+
+/* ---------- Verify ---------- */
+.verify{padding-block:130px 40px}
+.verify .term{margin-top:40px;background:#0A0808;border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.verify label{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:.9rem;color:var(--red-hi)}
+.verify input{flex:1;background:none;border:0;color:var(--paper);font:inherit;outline:none;min-width:0}
+.vlist{max-height:520px;overflow:auto;padding:8px}
+.vrow{display:grid;grid-template-columns:minmax(180px,.9fr) 2fr;gap:16px;align-items:center;padding:12px 12px;border-radius:12px}
+.vrow:hover{background:var(--ink-2)}
+.vrow .c{font-weight:600;display:flex;align-items:center;gap:12px}
+.vrow .c .plate{--lh:22px;padding:4px 8px;border-radius:7px}
+.vrow .c small{display:block;font-family:var(--f-mono);color:var(--muted);font-weight:400;font-size:.7rem}
+.vrow .receipts{justify-content:flex-start}
+.vempty{padding:24px;color:var(--muted);font-family:var(--f-mono);font-size:.85rem}
+@media (max-width:640px){.vrow{grid-template-columns:1fr;gap:8px}}
+
+/* ---------- Vote ---------- */
+.vote{padding-block:140px 100px;text-align:left}
+.vote .big{font-family:var(--f-display);font-weight:800;font-size:clamp(3.4rem,12vw,11rem);line-height:.85;letter-spacing:-.05em}
+.vote .big span{color:var(--red-hi)}
+.promise{display:grid;grid-template-columns:auto 1fr;gap:24px;align-items:start;margin-top:46px;max-width:860px}
+.promise .mono{color:var(--red-hi);padding-top:6px}
+.promise p{font-family:var(--f-display);font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.2;font-weight:500}
+.share{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px;align-items:center}
+.share .note{color:var(--muted);font-family:var(--f-mono);font-size:.78rem}
+footer{border-top:1px solid var(--line);padding:26px var(--gutter);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;color:var(--muted)}
+footer a{color:var(--paper)}
+
+/* reveal: visible at rest, gentle rise when JS marks it */
+.rv{transition:opacity .8s ease,transform .8s ease}
+.rv.pre{opacity:.001;transform:translateY(26px)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<div id="intro" aria-hidden="true">
+<pre id="introText"></pre>
+<button type="button" id="skip">Skip intro</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="#top">DA<span>/</span>26</a>
+  <nav class="nav" aria-label="Chapters">
+    <a href="#journey">Journey</a>
+    <a href="#talks">Talks</a>
+    <a href="#community">Community</a>
+    <a href="#manifesto">Manifesto</a>
+    <a href="#verify">Verify</a>
+    <a href="#vote">Vote</a>
+  </nav>
+  <div class="train mono" aria-hidden="true"><span id="epoch">epoch 0%</span><span class="bar"><i id="trainbar"></i></span></div>
+</header>
+
+<main id="top">
+
+<!-- HERO -->
+<section class="wrap hero" aria-labelledby="name">
+  <div>
+    <div class="eyebrow mono"><span class="dot"></span><span>Candidate for President</span><span>·</span><span>Data Science Club, CMU-Africa</span></div>
+    <h1 id="name">Daniel<span class="l2">Akhabue<em>.</em></span></h1>
+    <p class="tagline">Community is my <mark>DNA</mark>. Five years of building it, from campus to continent.</p>
+    <div class="cgi" aria-label="Manifesto pillars">
+      <a href="#manifesto" data-tab="continuity"><b>C</b>Continuity</a>
+      <a href="#manifesto" data-tab="growth"><b>G</b>Growth</a>
+      <a href="#manifesto" data-tab="impact"><b>I</b>Impact</a>
+    </div>
+    <div class="ctas">
+      <a class="btn primary" href="#journey">Start the journey <span aria-hidden="true">→</span></a>
+      <a class="btn" href="#manifesto">Read the manifesto</a>
+    </div>
+  </div>
+  <div class="portrait">
+    <canvas id="helix" aria-hidden="true"></canvas>
+    <figure>
+      <img src="img/hero.jpg" alt="Daniel Akhabue in the audience at the Synopsis AI Engineering Conference, wearing a HOST t-shirt">
+      <figcaption class="mono">fig. 01 · host, The Synopsis Conference 2025</figcaption>
+    </figure>
+    <div class="badge b1"><span class="plate"><img src="logos/kaggle.png" alt="Kaggle"></span><span><small>certified</small><b>Expert</b></span></div>
+    <div class="badge b2"><span class="plate"><img src="logos/zindi.png" alt="Zindi"></span><span><small style="color:rgba(255,255,255,.75)">competitions</small><b>10 medals</b></span></div>
+  </div>
+</section>
+
+<div class="wrap">
+  <div class="stats" id="stats">
+    <div class="stat"><div class="n"><span data-count="5">5</span><sup>yrs</sup></div><p>leading data and AI communities in Africa</p></div>
+    <div class="stat"><div class="n"><span data-count="4">4</span><sup>×</sup></div><p>data science hackathon wins</p></div>
+    <div class="stat"><div class="n"><span data-count="10">10</span></div><p>medals on Zindi</p><span class="plate"><img src="logos/zindi.png" alt="Zindi"></span></div>
+    <div class="stat"><div class="n"><span data-count="5">5</span></div><p>communities I've held lead roles in</p></div>
+    <div class="stat"><div class="n"><span data-count="7">7</span></div><p>stages I've spoken or taught on</p></div>
+    <div class="stat"><div class="n"><span data-count="1">1</span><sup>st</sup></div><p>national hackathon win for my campus</p><span class="plate"><img src="logos/dsn.png" alt="Data Scientists Network"></span></div>
+  </div>
+</div>
+
+<!-- JOURNEY -->
+<section class="journey" id="journey" aria-labelledby="jh">
+  <div class="wrap journey-head">
+    <div class="cell-tag mono"><b>In [01]:</b> journey.play()</div>
+    <h2 class="h2" id="jh">The journey so far</h2>
+    <p class="lede">Scroll to travel from my first public projects to the PyCon Africa stage. Click any stop to see the photos and the receipts.</p>
+  </div>
+  <div class="pin" id="pin">
+    <div class="rail"></div>
+    <div class="track" id="track"></div>
+    <div class="jprog mono" aria-hidden="true"><span class="yr" id="yr">2022</span><span class="bar"><i id="jbar"></i></span><span>scroll →</span></div>
+  </div>
+</section>
+
+<div class="strip" aria-hidden="true"></div>
+
+<!-- TALKS -->
+<section class="wrap talks" id="talks" aria-labelledby="th">
+  <div class="cell-tag mono"><b>In [02]:</b> talks.watch()</div>
+  <h2 class="h2" id="th">On the stage</h2>
+  <p class="lede">I've spoken and taught data science, machine learning and AI at conferences across Africa and the US. Here are three of those talks.</p>
+  <div class="reel">
+    <a class="vid" href="https://youtu.be/lk1wOmxuhX0" target="_blank" rel="noopener">
+      <img src="img/pyconafrica2.jpg" alt="Daniel speaking at PyCon Africa 2026">
+      <span class="play" aria-hidden="true"></span>
+      <div class="meta"><span class="mono">Uganda · 2026</span><h3>PyCon Africa</h3><p>Watch the talk on YouTube</p></div>
+    </a>
+    <a class="vid" href="https://youtu.be/v7Jib8l_jJI" target="_blank" rel="noopener">
+      <img src="img/pyconke2.jpg" alt="Daniel presenting 'Why Data Validation is Critical for Agentic AI' at PyCon Kenya 2025">
+      <span class="play" aria-hidden="true"></span>
+      <div class="meta"><span class="mono">Kenya · 2025</span><h3>PyCon Kenya</h3><p>Why data validation is critical for agentic AI</p></div>
+    </a>
+    <a class="vid bir" href="https://youtu.be/qy64sLG00Pw" target="_blank" rel="noopener">
+      <img src="logos/bir.png" alt="Black in Robotics logo" class="birlogo">
+      <span class="play" aria-hidden="true"></span>
+      <div class="meta"><span class="mono">USA · 2025</span><h3>Black in Robotics</h3><p>Watch the talk on YouTube</p></div>
+    </a>
+  </div>
+</section>
+
+<!-- COMMUNITY -->
+<section class="wrap community" id="community" aria-labelledby="ch">
+  <div class="cell-tag mono"><b>In [03]:</b> community.dna</div>
+  <h2 class="h2" id="ch">Community is my DNA</h2>
+  <p class="lede">Lead roles in five communities, from campus to professional. Hover or tap a card to flip it.</p>
+  <div class="dna-grid" id="dna"></div>
+
+  <div class="mosaic">
+    <figure><img src="img/team.jpg" alt="The AI Summer of Code organising team on stage at the Synopsis Conference" loading="lazy"><figcaption class="mono">AI Summer of Code organisers</figcaption></figure>
+    <figure><img src="img/aiinv3.jpg" alt="Students with laptops at the AI Invasion bootcamp, University of Benin" loading="lazy"><figcaption class="mono">AI Invasion, Uniben</figcaption></figure>
+    <figure><img src="img/pydata.jpg" alt="PyData community meetup around a conference table" loading="lazy"><figcaption class="mono">PyData</figcaption></figure>
+    <figure><img src="img/datafest23.jpg" alt="Daniel with two friends at DataFest Africa 2023" loading="lazy"><figcaption class="mono">DataFest Africa '23</figcaption></figure>
+    <figure><img src="img/speakers.jpg" alt="Speakers lined up on the Synopsis Conference stage" loading="lazy"><figcaption class="mono">Synopsis speakers</figcaption></figure>
+  </div>
+
+  <div class="cabinet-head">
+    <div class="cell-tag mono"><b>Out[03]:</b> trophy_cabinet</div>
+    <h2 class="h2">The trophy cabinet</h2>
+    <p class="lede">Hackathon wins, medals and awards. Hover or tap a trophy to give it a spin.</p>
+  </div>
+  <div class="cabinet" id="cabinet"></div>
+
+  <div class="marquee" aria-label="Communities and platforms in my network">
+    <div><span class="plate"><img src="logos/indaba.png" alt="Deep Learning Indaba"></span><span class="plate tile"><img src="logos/pyconafrica.png" alt="PyCon Africa"></span><span class="plate"><img src="logos/dsn.png" alt="Data Scientists Network"></span><span class="plate mlc"><img src="logos/mlc.png" alt=""><b>ML Collective</b></span><span class="plate dark"><img src="logos/aisoc.png" alt="AI Summer of Code"></span><span class="plate"><img src="logos/kaggle.png" alt="Kaggle"></span><span>DataFest Africa <b>✦</b></span><span class="plate"><img src="logos/zindi.png" alt="Zindi"></span><span class="plate"><img src="logos/pydata.png" alt="PyData"></span><span class="plate"><img src="logos/omdena.png" alt="Omdena"></span><span class="plate"><img src="logos/mlsa_wide.png" alt="Microsoft Learn Student Ambassadors"></span><span>AWS Community Day <b>✦</b></span><span class="plate tile"><img src="logos/bir.png" alt="Black in Robotics"></span><span aria-hidden="true" style="display:contents"><span class="plate"><img src="logos/indaba.png" alt="Deep Learning Indaba"></span><span class="plate tile"><img src="logos/pyconafrica.png" alt="PyCon Africa"></span><span class="plate"><img src="logos/dsn.png" alt="Data Scientists Network"></span><span class="plate mlc"><img src="logos/mlc.png" alt=""><b>ML Collective</b></span><span class="plate dark"><img src="logos/aisoc.png" alt="AI Summer of Code"></span><span class="plate"><img src="logos/kaggle.png" alt="Kaggle"></span><span>DataFest Africa <b>✦</b></span><span class="plate"><img src="logos/zindi.png" alt="Zindi"></span><span class="plate"><img src="logos/pydata.png" alt="PyData"></span><span class="plate"><img src="logos/omdena.png" alt="Omdena"></span><span class="plate"><img src="logos/mlsa_wide.png" alt="Microsoft Learn Student Ambassadors"></span><span>AWS Community Day <b>✦</b></span><span class="plate tile"><img src="logos/bir.png" alt="Black in Robotics"></span></span></div>
+  </div>
+</section>
+
+<div class="strip" aria-hidden="true"></div>
+
+<!-- MANIFESTO -->
+<section class="wrap manifesto" id="manifesto" aria-labelledby="mh">
+  <div class="cell-tag mono"><b>In [04]:</b> manifesto.read()</div>
+  <h2 class="quote" id="mh">“We keep the competitive spirit, and we evolve <em>what we compete on.</em>”</h2>
+
+  <div class="why">
+    <div class="rv"><span class="mono">01 · our fire is back</span><p>Through Kaggle- and Zindi-style hackathons, the current leadership turned a quiet club into an active, competitive community. I want to honour that work and build on it.</p></div>
+    <div class="rv"><span class="mono">02 · AI is moving</span><p>Today's AI engineers build agents, knowledge assistants, evaluations and products that work in the real world, not just models that score well on a leaderboard. Our community should prepare us for that world.</p></div>
+    <div class="rv"><span class="mono">03 · my vision</span><p>Keep what works, grow what's next, and turn CMU-Africa Data Science from a club into a community: a place where we can research anything, build anything, and connect with the world's leading AI companies.</p></div>
+  </div>
+
+  <div class="switcher">
+    <div>
+      <div class="cell-tag mono"><b>In [05]:</b> compete_on = ?</div>
+      <h3><s>Hackathons</s><br>Build-a-thons</h3>
+      <p class="lede">Competitions brought us together. Now let's compete on what the AI industry actually needs. Flip the switch to see the shift.</p>
+      <div class="toggle" role="group" aria-label="Competition mode">
+        <button type="button" id="mHack" aria-pressed="false">Hackathon</button>
+        <button type="button" id="mBuild" aria-pressed="true">Build-a-thon</button>
+      </div>
+    </div>
+    <div class="console" id="console">
+      <div class="top mono"><i></i><i></i><i></i><span id="ctitle">build_tracks.yaml</span></div>
+      <ol id="clist"></ol>
+      <div class="foot mono" id="cfoot"></div>
+    </div>
+  </div>
+
+  <div class="agenda" id="agenda">
+    <div class="cell-tag mono"><b>In [06]:</b> agenda[CGI]</div>
+    <h2 class="h2">My agenda</h2>
+    <div class="tabs" role="tablist" aria-label="Agenda pillars">
+      <button role="tab" id="t-continuity" aria-controls="p-continuity" aria-selected="true"><b>C</b>Continuity</button>
+      <button role="tab" id="t-growth" aria-controls="p-growth" aria-selected="false" tabindex="-1"><b>G</b>Growth</button>
+      <button role="tab" id="t-impact" aria-controls="p-impact" aria-selected="false" tabindex="-1"><b>I</b>Impact</button>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-continuity" aria-labelledby="t-continuity">
+      <article class="plank"><span class="num">01</span><h4>Rooted in Community DNA</h4>
+        <p>Everything we do builds on the spirit that brought this club back to life. Our community stays open, welcoming and member-led, for beginners and experts alike.</p>
+        <p class="kv"><b>What we keep:</b> the energy, teamwork and competitive spirit that revived the club.</p>
+        <p class="kv"><b>How we move forward:</b> regular member feedback, open planning of activities, and peer-to-peer learning and mentorship at the heart of everything we do.</p></article>
+      <article class="plank"><span class="num">02</span><h4>Compete to Build</h4>
+        <div class="logos"><span class="plate"><img src="logos/kaggle.png" alt="Kaggle"></span><span class="plate"><img src="logos/zindi.png" alt="Zindi"></span></div>
+        <p class="kv"><b>What we keep:</b> the Kaggle- and Zindi-style competitions, and entering global challenges as a club.</p>
+        <p class="kv"><b>How we move forward:</b> new build tracks in AI agents, RAG and knowledge assistants, benchmarks and evaluations, AI reasoning and AI safety, judged on live demos, real-world usefulness and technical depth. Beginner-friendly learning tracks so every member can take part.</p></article>
+    </div>
+    <div class="panel" role="tabpanel" id="p-growth" aria-labelledby="t-growth" hidden>
+      <article class="plank"><span class="num">03</span><h4>OpenLab: Research Anything, Build Anything</h4>
+        <p>A space where any member can turn an idea into a project or a research paper, with the support to see it through.</p>
+        <ul><li>Project teams and research groups working on real problems</li><li>Collaboration with the CMU-Africa Research Club and faculty for mentorship</li><li>Support to submit and present work at conferences such as Deep Learning Indaba</li><li>Regular showcases where members demo what they've built</li></ul></article>
+    </div>
+    <div class="panel" role="tabpanel" id="p-impact" aria-labelledby="t-impact" hidden>
+      <article class="plank"><span class="num">04</span><h4>Pan-African Collaboration</h4>
+        <p>Our members come from across Africa, and most of us will build our careers here. Our community should be connected to the whole continent.</p>
+        <div class="logos"><span class="plate"><img src="logos/indaba.png" alt="Deep Learning Indaba"></span><span class="plate"><img src="logos/dsn.png" alt="Data Scientists Network"></span><span class="plate tile"><img src="logos/pyconafrica.png" alt="PyCon Africa"></span></div>
+        <ul><li>Partnerships with university clubs, IndabaX, DSN and PyCon communities</li><li>Joint hackathons, events and speaker exchanges</li><li>Fellowships, conferences and programmes beyond our campus</li></ul></article>
+      <article class="plank"><span class="num">05</span><h4>Industry and Global Partnerships</h4>
+        <p>Bringing the AI industry closer to members through Kaggle, Zindi, NVIDIA, and AI companies in Kigali Innovation City and beyond.</p>
+        <div class="logos"><span class="plate"><img src="logos/kaggle.png" alt="Kaggle"></span><span class="plate"><img src="logos/zindi.png" alt="Zindi"></span></div>
+        <ul><li><b>Opportunities:</b> internships, jobs and competitions</li><li><b>Knowledge:</b> workshops, training and certifications</li><li><b>Technology:</b> compute, tools and datasets</li><li><b>Careers:</b> portfolio reviews and direct connections to employers</li></ul></article>
+      <article class="plank"><span class="num">06</span><h4>CMU-Africa AI Engineering Summit</h4>
+        <p>The first annual summit, launching Fall 2027. Details below.</p>
+        <ul><li>Talks, workshops, demo day and hackathon finals</li><li>Talent showcase and investor session</li></ul></article>
+    </div>
+  </div>
+
+  <div class="summit" id="summit">
+    <canvas id="net" aria-hidden="true"></canvas>
+    <div class="in">
+      <div>
+        <div class="cell-tag mono"><b>In [07]:</b> summit.launch(“Fall 2027”)</div>
+        <h3>CMU-Africa AI Engineering <span>Summit</span></h3>
+        <p>Africa has the talent to be the core engineers behind the world's leading AI systems. The world just needs to see it. In Fall 2027 we'll host the first annual summit and engage frontier AI companies and labs such as NVIDIA, Google DeepMind and Anthropic, along with global tech companies and investors, to meet the engineers building AI in Africa.</p>
+        <div class="logos"><span class="plate dark"><img src="logos/aisoc.png" alt="AI Summer of Code"></span><span class="plate tile"><img src="logos/pyconafrica.png" alt="PyCon Africa"></span></div>
+        <p class="proof">Having helped organise AI Summer of Code's Synopsis Conference and supported DataFest Africa and PyCon Africa, I know what it takes to deliver a conference of this scale.</p>
+      </div>
+      <ul>
+        <li><span class="mono">01</span>Technical talks and workshops on AI and ML engineering</li>
+        <li><span class="mono">02</span>OpenLab Demo Day: a year of member research and building on show</li>
+        <li><span class="mono">03</span>Compete to Build hackathon finals</li>
+        <li><span class="mono">04</span>A talent showcase connecting members with global AI employers</li>
+        <li><span class="mono">05</span>An investor session for member-led AI ventures</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFY -->
+<section class="wrap verify" id="verify" aria-labelledby="vh">
+  <div class="cell-tag mono"><b>In [08]:</b> go_and_verify()</div>
+  <h2 class="h2" id="vh">Go and verify.</h2>
+  <p class="lede">Every claim on this page has a receipt. Search the record and open the posts, videos and articles yourself.</p>
+  <div class="term">
+    <label for="q"><span>$ grep -i</span><input id="q" type="search" placeholder="try “pycon”, “kaggle” or “hackathon”" autocomplete="off"></label>
+    <div class="vlist" id="vlist" aria-live="polite"></div>
+  </div>
+</section>
+
+<div class="strip" aria-hidden="true"></div>
+
+<!-- VOTE -->
+<section class="wrap vote" id="vote" aria-labelledby="voteh">
+  <div class="cell-tag mono"><b>In [09]:</b> vote(“Daniel Akhabue”)</div>
+  <h2 class="big" id="voteh">Vote<br>Daniel<span>.</span></h2>
+  <div class="promise"><span class="mono">my promise</span><p>I will build on the foundation we already have, grow bigger, and make sure every member leaves CMU-Africa ready to build AI for Africa and the world.</p></div>
+  <div class="share">
+    <button class="btn primary" type="button" id="copy">Copy link to share</button>
+    <a class="btn" href="https://x.com/_danielakhabue" target="_blank" rel="noopener">Follow @_danielakhabue</a>
+    <span class="note" id="copied" role="status"></span>
+  </div>
+</section>
+
+</main>
+
+<footer class="mono">
+  <span>Daniel Akhabue · Candidate for President, Data Science Club, CMU-Africa</span>
+  <span>Continuity · Growth · Impact</span>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlgT">
+  <button class="dlg-close" type="button" id="dlgX" aria-label="Close">×</button>
+  <div class="dlg-gal" id="dlgG"></div>
+  <div class="dlg-bd">
+    <span class="mono" id="dlgW" style="color:var(--red-hi)"></span>
+    <h3 id="dlgT"></h3>
+    <p id="dlgP"></p>
+    <div class="receipts" id="dlgR"></div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const X = id => 'https://x.com/_danielakhabue/status/' + id;
+const L = id => 'https://lnkd.in/p/' + id;
+
+/* ---------- Data ---------- */
+const stops = [
+  {when:'2022 onward', y:2022, title:'Building in public', imgs:['stage','pyconke'], art:'</>', text:'I started sharing my data science and machine learning projects in public. Several of them went viral on X and LinkedIn.',
+   links:[['X post',X('1594652759642497025')],['X post',X('1648354231189925889')],['X post',X('1695492128833482793')],['LinkedIn',L('dXkB6AKA')]]},
+  {when:'Dec 2022', y:2022, title:'Kaggle Expert', logo:'kaggle', imgs:['kaggle','kaggle2'], text:'Earned Kaggle Expert status on the world\'s largest data science platform.',
+   links:[['X post',X('1603838400791863297')]]},
+  {when:'Apr 2023', y:2023, title:'AI Invasion, Uniben', imgs:['aiinv1','aiinv2','aiinv3','aiinv4'], text:'Organised the AI Invasion bootcamp at the University of Benin, bringing hands-on AI training to students on campus.',
+   links:[['X post',X('1645323542215442435')],['X post',X('1647262494161793024')]]},
+  {when:'2023', y:2023, title:'Our first national win', logo:'dsn', art:'#1', svg:'trophy', text:'Led my campus community to its first-ever national inter-university data science hackathon win at the DSN × Microsoft ML hackathon. We were named Campus Community of the Year, and I founded the Centre for AI Development.',
+   links:[['Uniben News','https://news.uniben.edu/university-of-benin-students-win-big-and-dominate-the-just-concluded-2023-dsn-microsoft-machine-learning-hackathon/'],['LinkedIn',L('d6X2EA7X')]]},
+  {when:'Jul 2023', y:2023, title:'Passing the baton', logo:'dsn', art:'→', text:'Handed over leadership of the DSN Uniben community to the next team.',
+   links:[['X post',X('1683015985924567041')]]},
+  {when:'2023 – 2024', y:2023, title:'DataFest Africa, Lagos', imgs:['datafest23','datafest_stage'], text:'Volunteered and spoke at DataFest Africa in Lagos, one of the continent\'s top data and AI conferences.',
+   links:[['X post',X('1696261392792502540')],['X post',X('1819090200339140618')],['LinkedIn',L('dU6PwjNp')]]},
+  {when:'Feb 2024', y:2024, title:'Microsoft Learn Student Ambassadors', artLogo:'mlsa', art:'MS', text:'Took on a lead role in the Microsoft Learn Student Ambassadors community (Beta).',
+   links:[['X post',X('1760991266798465111')],['LinkedIn',L('d66CFiWN')]]},
+  {when:'Nov 2024', y:2024, title:'Machine Learning Collective', artLogo:'mlc', art:'MLC', text:'Joined the ML Collective, an open AI research community, growing my network beyond Africa.',
+   links:[['X post',X('1860422037707034944')]]},
+  {when:'Jun 2025', y:2025, title:'Black in Robotics, USA', artLogo:'bir', art:'BiR', text:'Spoke at Black in Robotics in the United States.',
+   links:[['X post',X('1938688652629971107')],['Watch the talk','https://youtu.be/qy64sLG00Pw']]},
+  {when:'2025', y:2025, title:'AI Summer of Code 2.0', logo:'aisoc', imgs:['stage','synopsis_wide','aisoc_screen','speakers','organisers','backdrop'], text:'Co-organised AI Summer of Code and its Synopsis Conference, the largest AI engineering conference in Africa, and hosted on its main stage.',
+   links:[['LinkedIn',L('dzHqn8jN')],['LinkedIn',L('d__U76zJ')],['LinkedIn',L('dS8i-z_b')]]},
+  {when:'Sep 2025', y:2025, title:'PyCon Kenya', imgs:['pyconke','pyconke2'], text:'Spoke at PyCon Kenya on why data validation is critical for agentic AI.',
+   links:[['X post',X('1973042249408946480')],['LinkedIn',L('dj-tc3Ap')],['Watch the talk','https://youtu.be/v7Jib8l_jJI']]},
+  {when:'Oct 2026', y:2026, title:'PyCon Africa, Uganda', logo:'pyconafrica', imgs:['pyconafrica','pyconafrica2'], text:'Spoke at PyCon Africa 2026 in Uganda, teaching Python developers from across the continent.',
+   links:[['X post',X('2114674721417576791')],['LinkedIn',L('dNWcMj3G')],['Watch the talk','https://youtu.be/lk1wOmxuhX0']]},
+  {when:'Next stop', y:2027, title:'President, CMU-Africa Data Science', next:true, text:'Keep what works, grow what\'s next, and launch the CMU-Africa AI Engineering Summit in Fall 2027.'}
+];
+
+const communities = [
+  {g:'DSN', logo:'dsn', name:'Data Scientists Network', back:'Led the DSN community at the University of Benin, from bootcamps to our first national hackathon win.', link:['Handover post',X('1683015985924567041')]},
+  {g:'Om', logo:'omdena', name:'Omdena', back:'Lead role in the Omdena Data Science Community, where volunteers build AI for real-world problems.'},
+  {g:'Py', logo:'pydata', name:'PyData', back:'Lead role in the PyData community, bringing people together around open-source data tools.', link:['LinkedIn',L('d5k_anav')]},
+  {g:'Zi', logo:'zindi', name:'Zindi', back:'Zindi community lead, with 10 medals and 4 hackathon wins on the platform.'},
+  {g:'MS', logo:'mlsa_wide', name:'Microsoft Ambassadors', back:'Lead role in the Microsoft Learn Student Ambassadors community (Beta).', link:['LinkedIn',L('d66CFiWN')]},
+];
+
+const RLOGO = {'AI Summer of Code':'aisoc','PyCon Africa':'pyconafrica','Deep Learning Indaba':'indaba','PyData':'pydata','DSN Uniben':'dsn','DSN × Microsoft ML hackathon':'dsn','Kaggle Expert':'kaggle','Black in Robotics':'bir','Machine Learning Collective':'mlc','Microsoft Ambassadors':'mlsa'};
+const receipts = [
+  ['AI Summer of Code', 'organiser · Synopsis Conference', [['LinkedIn',L('dzHqn8jN')],['LinkedIn',L('d__U76zJ')],['LinkedIn',L('dS8i-z_b')]]],
+  ['PyCon Africa', 'speaker · Uganda 2026', [['X post',X('2114674721417576791')],['LinkedIn',L('dNWcMj3G')],['Video','https://youtu.be/lk1wOmxuhX0']]],
+  ['PyCon Kenya', 'speaker · 2025', [['X post',X('1973042249408946480')],['LinkedIn',L('dj-tc3Ap')],['Video','https://youtu.be/v7Jib8l_jJI']]],
+  ['Black in Robotics', 'speaker · USA 2025', [['X post',X('1938688652629971107')],['Video','https://youtu.be/qy64sLG00Pw']]],
+  ['AWS Community Day', 'speaker', [['Speaker credential',L('dbGZNubB')],['LinkedIn',L('d_RVduUy')]]],
+  ['Deep Learning Indaba', 'research poster award', [['LinkedIn',L('dGA65H2j')],['LinkedIn',L('djsTkJSp')]]],
+  ['DataFest Africa', 'volunteer & speaker · Lagos', [['X post',X('1819090200339140618')],['X post',X('1696261392792502540')],['LinkedIn',L('dU6PwjNp')]]],
+  ['PyData', 'community lead', [['LinkedIn',L('d5k_anav')]]],
+  ['Machine Learning Collective', 'network', [['X post',X('1860422037707034944')]]],
+  ['Microsoft Ambassadors', 'community lead', [['X post',X('1760991266798465111')],['LinkedIn',L('d66CFiWN')]]],
+  ['DSN Uniben', 'handover', [['X post',X('1683015985924567041')]]],
+  ['DSN × Microsoft ML hackathon', 'national win · Campus Community of the Year', [['LinkedIn',L('d6X2EA7X')],['Uniben News','https://news.uniben.edu/university-of-benin-students-win-big-and-dominate-the-just-concluded-2023-dsn-microsoft-machine-learning-hackathon/']]],
+  ['AI Invasion bootcamp', 'organiser · Uniben', [['X post',X('1647262494161793024')],['X post',X('1645323542215442435')]]],
+  ['Kaggle Expert', 'certified', [['X post',X('1603838400791863297')]]],
+  ['Viral projects', 'building in public', [['X post',X('1594652759642497025')],['X post',X('1648354231189925889')],['X post',X('1695492128833482793')],['LinkedIn',L('dXkB6AKA')]]],
+];
+
+const LOGOS = {kaggle:'Kaggle', zindi:'Zindi', dsn:'Data Scientists Network', pydata:'PyData', indaba:'Deep Learning Indaba', aisoc:'AI Summer of Code', pyconafrica:'PyCon Africa', bir:'Black in Robotics', mlc:'ML Collective', mlsa:'Microsoft Learn Student Ambassador', mlsa_wide:'Microsoft Learn Student Ambassadors', omdena:'Omdena'};
+const plate = k => k==='mlc' ? `<span class="plate mlc"><img src="logos/mlc.png" alt=""><b>ML Collective</b></span>` : `<span class="plate${k==='aisoc'?' dark':''}${k==='pyconafrica'||k==='bir'?' tile':''}"><img src="logos/${k}.png" alt="${LOGOS[k]}"></span>`;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const chips = ls => ls.map(([t,u]) => `<a class="chip" href="${esc(u)}" target="_blank" rel="noopener">${esc(t)} ↗</a>`).join('');
+
+/* ---------- Intro ---------- */
+const intro = document.getElementById('intro');
+const lines = [
+  '<b>&gt;&gt;&gt;</b> import community',
+  '<b>&gt;&gt;&gt;</b> candidate = community.load(<i>"Daniel Akhabue"</i>)',
+  '<b>&gt;&gt;&gt;</b> candidate.years_leading',
+  '<i>5</i>',
+  '<b>&gt;&gt;&gt;</b> candidate.run_for(<i>"President, CMU-Africa Data Science"</i>)',
+];
+function closeIntro(){ intro.classList.add('gone'); setTimeout(()=>intro.remove(),700); }
+document.getElementById('skip').onclick = closeIntro;
+intro.addEventListener('click', closeIntro);
+let seen = false; try { seen = sessionStorage.getItem('da-intro') === '1'; sessionStorage.setItem('da-intro','1'); } catch(e){}
+if (reduce || seen) { intro.remove(); }
+else {
+  const pre = document.getElementById('introText'); let i = 0;
+  const step = () => {
+    pre.innerHTML = lines.slice(0, i + 1).join('\n') + ' <span class="caret"></span>';
+    i++; if (i < lines.length) setTimeout(step, 360); else setTimeout(closeIntro, 700);
+  };
+  step();
+}
+
+
+/* ---------- Trophy + medal vectors ---------- */
+const METAL = {gold:['#FFF1C2','#E8B04A','#8E5E0E'], silver:['#FFFFFF','#C8CCD6','#6F7484'], bronze:['#FFD9B8','#C97B43','#6E3A17']};
+function grad(id, m){ const [a,b,c] = METAL[m];
+  return `<radialGradient id="${id}" cx="35%" cy="30%" r="75%"><stop offset="0" stop-color="${a}"/><stop offset=".55" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></radialGradient>`; }
+function medalSVG(id, metal, label, star){
+  const [a,b,c] = METAL[metal];
+  const inner = star
+    ? `<path d="M60 84l6.5 13.2 14.5 2.1-10.5 10.2 2.5 14.5L60 117.2l-13 6.8 2.5-14.5L39 99.3l14.5-2.1z" fill="${c}" opacity=".85"/>`
+    : `<text x="60" y="${label.length>2?110:112}" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="${label.length>2?20:26}" fill="${c}">${label}</text>`;
+  return `<svg viewBox="0 0 120 150" aria-hidden="true"><defs>${grad(id,metal)}<clipPath id="${id}c"><circle cx="60" cy="104" r="36"/></clipPath></defs>
+  <g class="swing">
+    <path d="M26 0h28l16 66H44z" fill="#a81a1a"/><path d="M36 0h7l16 66h-7z" fill="#F4F0EC" opacity=".9"/>
+    <path d="M66 0h28L76 66H50z" fill="#7d1111"/><path d="M76 0h7L66 66h-7z" fill="#F4F0EC" opacity=".55"/>
+    <rect x="50" y="60" width="20" height="10" rx="3" fill="${c}"/>
+    <circle cx="60" cy="104" r="38" fill="url(#${id})"/>
+    <circle cx="60" cy="104" r="29" fill="none" stroke="${c}" stroke-width="2" opacity=".55"/>
+    <circle cx="60" cy="104" r="34" fill="none" stroke="${a}" stroke-width="1" opacity=".7"/>
+    ${inner}
+    <g clip-path="url(#${id}c)"><rect class="shine" x="20" y="60" width="18" height="90" fill="#fff" opacity=".35" transform="skewX(-20)"/></g>
+  </g></svg>`;
+}
+function trophySVG(id, label){
+  const [a,b,c] = METAL.gold;
+  return `<svg viewBox="0 0 120 150" aria-hidden="true"><defs>
+    <linearGradient id="${id}" x1="0" x2="1"><stop offset="0" stop-color="${c}"/><stop offset=".35" stop-color="${a}"/><stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient>
+    <clipPath id="${id}c"><path d="M30 14h60v20c0 28-13 44-30 46-17-2-30-18-30-46z"/></clipPath></defs>
+  <g class="lift">
+    <path d="M32 22H16c0 22 9 32 22 34" fill="none" stroke="url(#${id})" stroke-width="6" stroke-linecap="round"/>
+    <path d="M88 22h16c0 22-9 32-22 34" fill="none" stroke="url(#${id})" stroke-width="6" stroke-linecap="round"/>
+    <path d="M30 14h60v20c0 28-13 44-30 46-17-2-30-18-30-46z" fill="url(#${id})"/>
+    <ellipse cx="60" cy="14" rx="30" ry="4" fill="${a}"/>
+    <path d="M60 30l4.6 9.4 10.4 1.5-7.5 7.3 1.8 10.3L60 53.6l-9.3 4.9 1.8-10.3-7.5-7.3 10.4-1.5z" fill="${c}" opacity=".7"/>
+    <g clip-path="url(#${id}c)"><rect class="shine" x="20" y="0" width="16" height="90" fill="#fff" opacity=".4" transform="skewX(-20)"/></g>
+    <path d="M54 80h12l3 16H51z" fill="url(#${id})"/>
+    <rect x="40" y="96" width="40" height="8" rx="2" fill="url(#${id})"/>
+    <rect x="30" y="104" width="60" height="30" rx="4" fill="#2A2122" stroke="${c}" stroke-opacity=".6"/>
+    <rect x="42" y="112" width="36" height="14" rx="2" fill="${b}" opacity=".9"/>
+    <text x="60" y="123" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="500" font-size="9" fill="#2A2122" textLength="30" lengthAdjust="spacingAndGlyphs">${label}</text>
+  </g></svg>`;
+}
+function rosetteSVG(id){
+  let pts=''; for (let k=0;k<32;k++){ const r = k%2?33:40, t = k/32*Math.PI*2; pts += `${(60+r*Math.cos(t)).toFixed(1)},${(62+r*Math.sin(t)).toFixed(1)} `; }
+  return `<svg viewBox="0 0 120 150" aria-hidden="true"><defs>${grad(id,'gold')}</defs><g class="swing" style="transform-origin:50% 40%">
+    <path d="M40 80l-14 62 16-10 10 14 12-60z" fill="#7d1111"/><path d="M80 80l14 62-16-10-10 14-12-60z" fill="#a81a1a"/>
+    <polygon points="${pts}" fill="#a81a1a"/><circle cx="60" cy="62" r="29" fill="#F4F0EC"/><circle cx="60" cy="62" r="24" fill="url(#${id})"/>
+    <text x="60" y="58" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="6" fill="#5a3a06" textLength="36" lengthAdjust="spacingAndGlyphs">AI RESEARCH</text>
+    <text x="60" y="72" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="11" fill="#5a3a06" textLength="38" lengthAdjust="spacingAndGlyphs">POSTER</text>
+  </g></svg>`;
+}
+const awards = [
+  {wide:true, icon:()=>`<div class="quad">${[1,2,3,4].map(k=>trophySVG('q'+k,'WIN '+k)).join('')}</div>`, chip:'winner ×4', tally:'4 trophies', title:'Hackathon champion', text:'Four data science hackathon wins.'},
+  {wide:true, icon:()=>`<div class="minis">${Array.from({length:10},(_,k)=>medalSVG('zm'+k,'gold',String(k+1))).join('')}</div>`, logo:'zindi', tally:'10 medals', title:'10 medals on Zindi', text:'Won in data science competitions on Zindi, across Africa.'},
+  {pair:true, icon:()=>trophySVG('aw2','NO. 1'), logo:'dsn', tally:'national', title:'Campus Community of the Year', text:'Our first-ever national inter-university hackathon win, at the DSN × Microsoft ML hackathon.', link:'https://news.uniben.edu/university-of-benin-students-win-big-and-dominate-the-just-concluded-2023-dsn-microsoft-machine-learning-hackathon/'},
+  {icon:()=>medalSVG('aw3','gold','',true), logo:'kaggle', tally:'certified', title:'Kaggle Expert', text:'Certified on the world\'s largest data science platform.', link:X('1603838400791863297')},
+  {icon:()=>rosetteSVG('aw4'), logo:'indaba', tally:'research', title:'Deep Learning Indaba', text:'AI research poster award winner.', link:L('dGA65H2j')},
+  {icon:()=>medalSVG('aw5','silver','',true), logo:'zindi', tally:'continental', title:'UmojaHack Africa', text:'Silver medal for my campus community on the African continent.'},
+  {icon:()=>medalSVG('aw6','bronze','3rd'), logo:'indaba', tally:'2024', title:'IndabaX Rwanda', text:'Third place at IndabaX Rwanda 2024.'},
+];
+document.getElementById('cabinet').innerHTML = awards.map(a => `
+  <div class="award${a.wide?' wide':''}${a.pair?' pair':''}" tabindex="0" role="group" aria-label="${esc(a.title)}">
+    <div class="icon">${a.icon()}</div>${a.logo ? plate(a.logo) : `<span class="plate chip-win"><b>${esc(a.chip||'')}</b></span>`}
+    <span class="tally">${esc(a.tally)}</span><h3>${esc(a.title)}</h3><p>${esc(a.text)}</p>
+    ${a.link ? `<a href="${esc(a.link)}" target="_blank" rel="noopener">verify ↗</a>` : '<span class="nolink"></span>'}
+  </div>`).join('');
+document.querySelectorAll('.award').forEach(el => {
+  const spin = e => { if (e.target.closest && e.target.closest('a')) return; el.classList.remove('go'); void el.offsetWidth; el.classList.add('go'); setTimeout(()=>el.classList.remove('go'),1700); };
+  el.addEventListener('click', spin);
+  el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){ e.preventDefault(); spin(e); } });
+});
+
+/* ---------- Journey ---------- */
+const track = document.getElementById('track');
+track.innerHTML = stops.map((s,i) => {
+  const ph = s.next ? '' : `<div class="ph">${s.logo ? plate(s.logo) : ''}${s.imgs ? `<img src="img/${s.imgs[0]}.jpg" alt="" loading="lazy">${s.imgs.length>1?`<span class="count mono">${s.imgs.length} photos</span>`:''}` : (s.artLogo ? `<div class="art">${plate(s.artLogo).replace('class="plate','class="plate bir-lg')}</div>` : s.svg ? `<div class="art"><div style="height:150px;filter:drop-shadow(0 14px 18px rgba(0,0,0,.5))">${trophySVG('t'+i,'#1')}</div></div>` : `<div class="art"><span>${esc(s.art)}</span></div>`)}</div>`;
+  return `<button type="button" class="stop${s.next?' next':''}" data-i="${i}" aria-label="${esc(s.when + ': ' + s.title)}">${ph}
+    <div class="bd"><span class="when mono">${esc(s.when)}</span><h3>${esc(s.title)}</h3><p>${esc(s.text)}</p>
+    <span class="more mono">${s.next ? 'Read the manifesto →' : 'Open + verify ↗'}</span></div></button>`;
+}).join('');
+
+const journey = document.getElementById('journey'), pin = document.getElementById('pin');
+const jbar = document.getElementById('jbar'), yr = document.getElementById('yr');
+let dist = 0, flat = false;
+function layoutJourney(){
+  flat = innerWidth < 900 || reduce;
+  journey.classList.toggle('flat', flat);
+  if (flat){ journey.style.height = ''; track.style.transform=''; return; }
+  dist = Math.max(0, track.scrollWidth - innerWidth);
+  journey.style.height = (dist + innerHeight + document.querySelector('.journey-head').offsetHeight) + 'px';
+  onScroll();
+}
+const stopEls = [...track.children];
+function onScroll(){
+  const h = document.documentElement;
+  const p = h.scrollTop / Math.max(1, h.scrollHeight - innerHeight);
+  document.getElementById('trainbar').style.width = (p*100).toFixed(1)+'%';
+  document.getElementById('epoch').textContent = 'epoch ' + Math.round(p*100) + '%';
+  if (!flat){
+    const r = pin.parentElement.getBoundingClientRect();
+    const start = document.querySelector('.journey-head').offsetHeight;
+    const prog = Math.min(1, Math.max(0, (-r.top - start) / Math.max(1, dist)));
+    track.style.transform = `translate3d(${-prog*dist}px,0,0)`;
+    jbar.style.width = (prog*100)+'%';
+    const idx = Math.min(stops.length-1, Math.round(prog*(stops.length-1)));
+    yr.textContent = stops[idx].y;
+  }
+  // nav highlight
+  let cur = '';
+  document.querySelectorAll('main section[id]').forEach(s => { if (s.getBoundingClientRect().top < innerHeight*.4) cur = s.id; });
+  document.querySelectorAll('.nav a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#'+cur));
+}
+addEventListener('scroll', onScroll, {passive:true});
+addEventListener('resize', layoutJourney);
+addEventListener('load', layoutJourney);
+layoutJourney();
+
+// tilt
+if (!reduce) stopEls.forEach(el => {
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect(), x = (e.clientX - r.left)/r.width - .5, y = (e.clientY - r.top)/r.height - .5;
+    el.style.transform = `rotateY(${x*10}deg) rotateX(${-y*10}deg) translateZ(0)`;
+  });
+  el.addEventListener('pointerleave', () => el.style.transform = '');
+});
+
+// dialog
+const dlg = document.getElementById('dlg');
+track.addEventListener('click', e => {
+  const b = e.target.closest('.stop'); if (!b) return;
+  const s = stops[+b.dataset.i];
+  if (s.next){ document.getElementById('manifesto').scrollIntoView({behavior: reduce?'auto':'smooth'}); return; }
+  document.getElementById('dlgW').innerHTML = (s.logo ? plate(s.logo) + ' ' : '') + esc(s.when);
+  document.getElementById('dlgT').textContent = s.title;
+  document.getElementById('dlgP').textContent = s.text;
+  document.getElementById('dlgR').innerHTML = chips(s.links || []);
+  const g = document.getElementById('dlgG');
+  g.innerHTML = (s.imgs||[]).map(k => `<img src="img/${k}.jpg" alt="${esc(s.title)} photo">`).join('');
+  g.style.display = s.imgs ? '' : 'none';
+  dlg.showModal();
+});
+document.getElementById('dlgX').onclick = () => dlg.close();
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+
+/* ---------- Community cards ---------- */
+document.getElementById('dna').innerHTML = communities.map(c => `
+  <div class="flip" tabindex="0" role="button" aria-label="${esc(c.name)}: ${esc(c.back)}">
+    <div class="in">
+      <div class="face"><span class="role mono">lead role</span>${c.logo ? plate(c.logo) : `<span class="glyph" aria-hidden="true">${esc(c.g)}</span>`}<div><h3>${esc(c.name)}</h3><span class="hint mono">flip ↻</span></div></div>
+      <div class="face back"><span class="mono">${esc(c.name)}</span><p>${esc(c.back)}</p>${c.link ? chips([c.link]) : '<span></span>'}</div>
+    </div>
+  </div>`).join('');
+document.querySelectorAll('.flip').forEach(f => {
+  f.addEventListener('click', e => { if (!e.target.closest('a')) f.classList.toggle('on'); });
+  f.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){ e.preventDefault(); f.classList.toggle('on'); } });
+});
+
+/* ---------- Hackathon vs Build-a-thon ---------- */
+const modes = {
+  hack:{title:'leaderboard.csv', foot:'judged on: a single leaderboard score',
+    rows:[['#1','Tabular prediction','private LB','0.9412'],['#2','Image classification','private LB','0.9387'],['#3','Time-series forecast','private LB','RMSE 0.18'],['#4','NLP sentiment','private LB','F1 0.88'],['#5','Churn model','private LB','AUC 0.91']]},
+  build:{title:'build_tracks.yaml', foot:'judged on: live demo · real-world usefulness · technical depth',
+    rows:[['01','AI Agents','tools, planning and actions','demo'],['02','RAG & knowledge assistants','grounded answers over real data','demo'],['03','Benchmarks & evaluations','measuring what models can do','demo'],['04','AI reasoning','multi-step problem solving','demo'],['05','AI safety & trust','reliable, honest systems','demo']]}
+};
+const con = document.getElementById('console');
+function setMode(m){
+  const d = modes[m];
+  document.getElementById('ctitle').textContent = d.title;
+  document.getElementById('cfoot').textContent = d.foot;
+  document.getElementById('clist').innerHTML = d.rows.map(r => `<li><span class="k">${r[0]}</span><span><b>${esc(r[1])}</b><small>${esc(r[2])}</small></span><span class="v">${esc(r[3])}</span></li>`).join('');
+  document.getElementById('mHack').setAttribute('aria-pressed', m==='hack');
+  document.getElementById('mBuild').setAttribute('aria-pressed', m==='build');
+  con.classList.remove('swap'); void con.offsetWidth; con.classList.add('swap');
+}
+document.getElementById('mHack').onclick = () => setMode('hack');
+document.getElementById('mBuild').onclick = () => setMode('build');
+setMode('build');
+
+/* ---------- Agenda tabs ---------- */
+const tabs = [...document.querySelectorAll('[role=tab]')];
+function selectTab(name){
+  tabs.forEach(t => { const on = t.id === 't-'+name; t.setAttribute('aria-selected', on); t.tabIndex = on?0:-1;
+    document.getElementById(t.getAttribute('aria-controls')).hidden = !on; });
+}
+tabs.forEach((t,i) => {
+  t.onclick = () => selectTab(t.id.slice(2));
+  t.onkeydown = e => { if (e.key==='ArrowRight'||e.key==='ArrowLeft'){ const n = tabs[(i + (e.key==='ArrowRight'?1:-1) + tabs.length)%tabs.length]; n.focus(); selectTab(n.id.slice(2)); } };
+});
+document.querySelectorAll('.cgi a').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault(); selectTab(a.dataset.tab);
+  document.getElementById('agenda').scrollIntoView({behavior: reduce?'auto':'smooth'});
+}));
+
+/* ---------- Verify ---------- */
+const vlist = document.getElementById('vlist');
+function renderV(q=''){
+  q = q.trim().toLowerCase();
+  const rows = receipts.filter(r => !q || (r[0]+' '+r[1]+' '+r[2].map(x=>x[0]).join(' ')).toLowerCase().includes(q));
+  vlist.innerHTML = rows.length ? rows.map(r => `<div class="vrow"><div class="c">${RLOGO[r[0]] ? plate(RLOGO[r[0]]) : ''}<span>${esc(r[0])}<small>${esc(r[1])}</small></span></div><div class="receipts">${chips(r[2])}</div></div>`).join('')
+    : `<div class="vempty">0 matches for “${esc(q)}”. Try another word.</div>`;
+}
+document.getElementById('q').addEventListener('input', e => renderV(e.target.value));
+renderV();
+
+/* ---------- Share ---------- */
+document.getElementById('copy').onclick = async () => {
+  const out = document.getElementById('copied');
+  try { await navigator.clipboard.writeText(location.href.split('#')[0]); out.textContent = 'Link copied. Send it to a classmate.'; }
+  catch(e){ out.textContent = 'Copy is blocked here. Copy the address from your browser bar.'; }
+};
+
+/* ---------- Count-up + reveal (start only for elements off-screen at load) ---------- */
+if (!reduce && 'IntersectionObserver' in window){
+  const io = new IntersectionObserver(es => es.forEach(en => {
+    if (!en.isIntersecting) return; io.unobserve(en.target);
+    const el = en.target;
+    if (el.dataset.count){ const to = +el.dataset.count, t0 = performance.now();
+      const tick = t => { const k = Math.min(1,(t-t0)/1100); el.textContent = Math.round(to*(1-Math.pow(1-k,3))); if (k<1) requestAnimationFrame(tick); };
+      requestAnimationFrame(tick); }
+    else el.classList.remove('pre');
+  }), {threshold:.3});
+  document.querySelectorAll('[data-count], .rv').forEach(el => {
+    if (el.getBoundingClientRect().top > innerHeight){ if (!el.dataset.count) el.classList.add('pre'); io.observe(el); }
+  });
+}
+
+/* ---------- Helix (hero) ---------- */
+const hc = document.getElementById('helix'), hx = hc.getContext('2d');
+let mx = 0, my = 0;
+addEventListener('pointermove', e => { mx = e.clientX/innerWidth - .5; my = e.clientY/innerHeight - .5; });
+function sizeCanvas(c){ const r = c.getBoundingClientRect(), d = Math.min(2, devicePixelRatio||1); c.width = r.width*d; c.height = r.height*d; c.getContext('2d').setTransform(d,0,0,d,0,0); return r; }
+let hr = sizeCanvas(hc);
+function helix(t){
+  const w = hr.width, h = hr.height; hx.clearRect(0,0,w,h);
+  const N = 34, cx = w*0.5 + mx*30, R = w*0.44, step = h/(N-1);
+  for (let i=0;i<N;i++){
+    const ph = t*0.0007 + i*0.33, s = Math.sin(ph), c = Math.cos(ph);
+    const y = i*step + my*20, x1 = cx + s*R, x2 = cx - s*R;
+    const a1 = .25 + .55*(c+1)/2, a2 = .25 + .55*(1-c)/2;
+    hx.strokeStyle = `rgba(242,237,226,${0.07 + 0.08*Math.abs(c)})`; hx.lineWidth = 1;
+    hx.beginPath(); hx.moveTo(x1,y); hx.lineTo(x2,y); hx.stroke();
+    hx.fillStyle = `rgba(229,72,77,${a1})`; hx.beginPath(); hx.arc(x1,y,2+2.6*(c+1)/2,0,7); hx.fill();
+    hx.fillStyle = `rgba(242,237,226,${a2})`; hx.beginPath(); hx.arc(x2,y,2+2.6*(1-c)/2,0,7); hx.fill();
+  }
+}
+/* ---------- Network (summit) ---------- */
+const nc = document.getElementById('net'), nx = nc.getContext('2d');
+let nr = sizeCanvas(nc);
+const nodes = Array.from({length:46}, () => ({x:Math.random(), y:Math.random(), vx:(Math.random()-.5)*.0006, vy:(Math.random()-.5)*.0006}));
+function net(){
+  const w = nr.width, h = nr.height; nx.clearRect(0,0,w,h);
+  nodes.forEach(n => { n.x += n.vx; n.y += n.vy; if (n.x<0||n.x>1) n.vx*=-1; if (n.y<0||n.y>1) n.vy*=-1; });
+  for (let i=0;i<nodes.length;i++) for (let j=i+1;j<nodes.length;j++){
+    const a = nodes[i], b = nodes[j], dx = (a.x-b.x)*w, dy = (a.y-b.y)*h, d = Math.hypot(dx,dy);
+    if (d < 150){ nx.strokeStyle = `rgba(229,72,77,${(1-d/150)*.28})`; nx.beginPath(); nx.moveTo(a.x*w,a.y*h); nx.lineTo(b.x*w,b.y*h); nx.stroke(); }
+  }
+  nodes.forEach((n,i) => { nx.fillStyle = i%5? 'rgba(242,237,226,.5)' : 'rgba(229,72,77,.9)'; nx.beginPath(); nx.arc(n.x*w,n.y*h,i%5?1.6:2.6,0,7); nx.fill(); });
+}
+addEventListener('resize', () => { hr = sizeCanvas(hc); nr = sizeCanvas(nc); if (reduce){ helix(0); net(); } });
+if (reduce){ helix(0); net(); }
+else { const loop = t => { helix(t); net(); requestAnimationFrame(loop); }; requestAnimationFrame(loop); }
+})();
+</script>
+</body>
+</html>
