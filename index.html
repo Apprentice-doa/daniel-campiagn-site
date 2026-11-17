@@ -82,6 +82,11 @@ main,header,footer{position:relative;z-index:1}
 .topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px var(--gutter);background:linear-gradient(var(--ink) 30%,transparent);}
 .brand{font-family:var(--f-display);font-weight:700;font-size:1.05rem;text-decoration:none;display:flex;align-items:center;gap:10px}
 .brand span{color:var(--red-hi)}
+.brand .clublogo{height:42px;width:auto}
+@media (max-width:600px){.brand .clublogo{height:34px}}
+.foot-logos{display:flex;align-items:center;gap:28px}
+.foot-logos img{height:46px;width:auto}
+.foot-logos .sep{width:1px;height:40px;background:var(--line)}
 .train{display:flex;align-items:center;gap:10px;color:var(--muted)}
 .train .bar{width:clamp(80px,14vw,200px);height:4px;background:var(--line);border-radius:4px;overflow:hidden}
 .train .bar i{display:block;height:100%;width:0;background:var(--red-hi)}
@@ -393,7 +398,7 @@ dialog::backdrop{background:rgba(8,6,6,.8);backdrop-filter:blur(6px)}
 .promise p{font-family:var(--f-display);font-size:clamp(1.4rem,2.6vw,2rem);line-height:1.2;font-weight:500}
 .share{display:flex;flex-wrap:wrap;gap:12px;margin-top:40px;align-items:center}
 .share .note{color:var(--muted);font-family:var(--f-mono);font-size:.78rem}
-footer{border-top:1px solid var(--line);padding:26px var(--gutter);display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:30px var(--gutter);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;color:var(--muted)}
 footer a{color:var(--paper)}
 
 /* reveal: visible at rest, gentle rise when JS marks it */
@@ -414,7 +419,7 @@ footer a{color:var(--paper)}
 </div>
 
 <header class="topbar">
-  <a class="brand" href="#top">DA<span>/</span>26</a>
+  <a class="brand" href="#top" aria-label="Back to top"><img class="clublogo" src="logos/data-science-logo.png" alt="Data Science Club, Carnegie Mellon University Africa"></a>
   <nav class="nav" aria-label="Chapters">
     <a href="#journey">Journey</a>
     <a href="#talks">Talks</a>
@@ -651,6 +656,7 @@ footer a{color:var(--paper)}
 </main>
 
 <footer class="mono">
+  <div class="foot-logos"><img src="logos/data-science-logo.png" alt="Data Science Club, Carnegie Mellon University Africa"><span class="sep"></span><img src="logos/cmu-africa-logo.png" alt="Carnegie Mellon University Africa"></div>
   <span>Daniel Akhabue · Candidate for President, Data Science Club, CMU-Africa</span>
   <span>Continuity · Growth · Impact</span>
 </footer>
